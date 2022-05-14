@@ -1,15 +1,15 @@
-import 'dart:async';
-import 'package:schulte_table/reactionMode.dart';
-import 'package:schulte_table/resultPage.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'classicLightMode.dart';
-import 'classicLightReverseMode.dart';
-import 'classicOriginalMode.dart';
-import 'classicOriginalReverseMode.dart';
-import 'memoryMode.dart';
+import 'dart:async';
 
-const int MAX_ELEMENT_NUMBER = 25;
+import 'reaction_mode.dart';
+import 'result_page.dart';
+import 'classic_light_mode.dart';
+import 'classic_light_reverse_mode.dart';
+import 'classic_original_mode.dart';
+import 'classic_original_reverse_mode.dart';
+import 'memory_mode.dart';
+
+const int maxElementNumber = 25;
 
 List<int> timePassedToFindNumbers = [0];
 List<int> listUsedForRandomAssignment = [];
@@ -28,31 +28,54 @@ void main() {
   listMaker();
 
   runApp(MaterialApp(
+    theme: ThemeData(
+      textButtonTheme: TextButtonThemeData(
+        style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.all<Color>(Colors.blueAccent),
+          foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+        ),
+      ),
+    ),
     initialRoute: "/",
     routes: {
-      "/": (context) => HomeRoute(),
-      "/reactionModePlayButton": (context) => PlayButton("Reaction Mode", "/reactionMode", bestTimeReaction),
-      "/reactionMode": (context) => ReactionMode(),
-      "/classicLightModePlayButton": (context) => PlayButton("Classic Light Mode", "/classicLightMode", bestTimeClassicLight),
-      "/classicLightMode": (context) => ClassicLightMode(),
-      "/classicLightReverseModePlayButton": (context) => PlayButton("Classic Light Reverse Mode", "/classicLightReverseMode", bestTimeClassicLightReverse),
-      "/classicLightReverseMode": (context) => ClassicLightReverseMode(),
-      "/classicOriginalModePlayButton": (context) => PlayButton("Classic Original Mode", "/classicOriginalMode", bestTimeClassicOriginal),
-      "/classicOriginalMode": (context) => ClassicOriginalMode(),
-      "/classicOriginalReverseModePlayButton": (context) => PlayButton("Classic Original Reverse Mode", "/classicOriginalReverseMode", bestTimeClassicOriginalReverse),
-      "/classicOriginalReverseMode": (context) => ClassicOriginalReverseMode(),
-      "/memoryModePlayButton": (context) => PlayButton("Memory Mode", "/memoryMode", bestTimeMemory),
-      "/memoryMode": (context) => MemoryMode(),
+      "/": (context) => const HomeRoute(),
+      "/reactionModePlayButton": (context) =>
+          PlayButton("Reaction Mode", "/reactionMode", bestTimeReaction),
+      "/reactionMode": (context) => const ReactionMode(),
+      "/classicLightModePlayButton": (context) => PlayButton(
+          "Classic Light Mode", "/classicLightMode", bestTimeClassicLight),
+      "/classicLightMode": (context) => const ClassicLightMode(),
+      "/classicLightReverseModePlayButton": (context) => PlayButton(
+          "Classic Light Reverse Mode",
+          "/classicLightReverseMode",
+          bestTimeClassicLightReverse),
+      "/classicLightReverseMode": (context) => const ClassicLightReverseMode(),
+      "/classicOriginalModePlayButton": (context) => PlayButton(
+          "Classic Original Mode",
+          "/classicOriginalMode",
+          bestTimeClassicOriginal),
+      "/classicOriginalMode": (context) => const ClassicOriginalMode(),
+      "/classicOriginalReverseModePlayButton": (context) => PlayButton(
+          "Classic Original Reverse Mode",
+          "/classicOriginalReverseMode",
+          bestTimeClassicOriginalReverse),
+      "/classicOriginalReverseMode": (context) =>
+          const ClassicOriginalReverseMode(),
+      "/memoryModePlayButton": (context) =>
+          PlayButton("Memory Mode", "/memoryMode", bestTimeMemory),
+      "/memoryMode": (context) => const MemoryMode(),
     },
   ));
 }
 
 class HomeRoute extends StatelessWidget {
+  const HomeRoute({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Schulte Table"),
+        title: const Text("Schulte Table"),
       ),
       body: GridView.count(
         primary: false,
@@ -61,50 +84,38 @@ class HomeRoute extends StatelessWidget {
         mainAxisSpacing: 20,
         crossAxisCount: 2,
         children: <Widget>[
-          FlatButton(
-            child: Text("Reaction"),
+          TextButton(
             onPressed: () =>
                 Navigator.pushNamed(context, "/reactionModePlayButton"),
-            color: Colors.blueAccent,
-            textColor: Colors.white,
+            child: const Text("Reaction"),
           ),
-          FlatButton(
-            child: Text("Classic Light"),
+          TextButton(
             onPressed: () =>
                 Navigator.pushNamed(context, "/classicLightModePlayButton"),
-            color: Colors.blueAccent,
-            textColor: Colors.white,
+            child: const Text("Classic Light"),
           ),
-          FlatButton(
-            child: Text("Classic Light Reverse"),
+          TextButton(
             onPressed: () => Navigator.pushNamed(
                 context, "/classicLightReverseModePlayButton"),
-            color: Colors.blueAccent,
-            textColor: Colors.white,
+            child: const Text("Classic Light Reverse"),
           ),
-          FlatButton(
-            child: Text("Classic Original"),
+          TextButton(
             onPressed: () =>
                 Navigator.pushNamed(context, "/classicOriginalModePlayButton"),
-            color: Colors.blueAccent,
-            textColor: Colors.white,
+            child: const Text("Classic Original"),
           ),
-          FlatButton(
-            child: Text(
+          TextButton(
+            onPressed: () => Navigator.pushNamed(
+                context, "/classicOriginalReverseModePlayButton"),
+            child: const Text(
               "Classic Original Reverse",
               textAlign: TextAlign.center,
             ),
-            onPressed: () => Navigator.pushNamed(
-                context, "/classicOriginalReverseModePlayButton"),
-            color: Colors.blueAccent,
-            textColor: Colors.white,
           ),
-          FlatButton(
-            child: Text("Memory"),
+          TextButton(
             onPressed: () =>
                 Navigator.pushNamed(context, "/memoryModePlayButton"),
-            color: Colors.blueAccent,
-            textColor: Colors.white,
+            child: const Text("Memory"),
           ),
         ],
       ),
@@ -113,26 +124,18 @@ class HomeRoute extends StatelessWidget {
 }
 
 class PlayButton extends StatefulWidget {
-  PlayButton(String gameModeName, String routeName, int bestTime) {
-    this.gameModeName = gameModeName;
-    this.routeName = routeName;
-    this.bestTime = bestTime;
-  }
+  PlayButton(this.gameModeName, this.routeName, this.bestTime, {Key? key})
+      : super(key: key);
   String gameModeName, routeName;
   int bestTime;
   @override
   State<StatefulWidget> createState() {
-    return new PlayButtonState(
-        this.gameModeName, this.routeName, this.bestTime);
+    return PlayButtonState(gameModeName, routeName, bestTime);
   }
 }
 
 class PlayButtonState extends State<PlayButton> {
-  PlayButtonState(String gameModeName, String routeName, int bestTime) {
-    this.gameModeName = gameModeName;
-    this.routeName = routeName;
-    this.bestTime = bestTime;
-  }
+  PlayButtonState(this.gameModeName, this.routeName, this.bestTime);
   String gameModeName, routeName;
   int bestTime;
   @override
@@ -140,7 +143,7 @@ class PlayButtonState extends State<PlayButton> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-            icon: Icon(Icons.arrow_back, color: Colors.white),
+            icon: const Icon(Icons.arrow_back, color: Colors.white),
             onPressed: () =>
                 Navigator.popUntil(context, ModalRoute.withName("/"))),
         title: Text("Play $gameModeName"),
@@ -150,12 +153,10 @@ class PlayButtonState extends State<PlayButton> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text("Best Time: ${this.bestTime / 1000} second(s)"),
-            FlatButton(
-              child: Text("Play!"),
-              color: Colors.blueAccent,
-              textColor: Colors.white,
+            Text("Best Time: ${bestTime / 1000} second(s)"),
+            TextButton(
               onPressed: () => Navigator.pushNamed(context, routeName),
+              child: const Text("Play!"),
             ),
           ],
         ),
@@ -165,14 +166,14 @@ class PlayButtonState extends State<PlayButton> {
 }
 
 class ReactionMode extends StatefulWidget {
-  ReactionMode({Key key}) : super(key: key);
+  const ReactionMode({Key? key}) : super(key: key);
   @override
   State<StatefulWidget> createState() {
     timePassedToFindNumbers = [0];
     globalTimer = 0;
     hasRoundFinished = false;
     listMaker();
-    return new ReactionModeState();
+    return ReactionModeState();
   }
 }
 
@@ -189,11 +190,11 @@ class ReactionModeState extends State<ReactionMode> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.white),
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () =>
               Navigator.popUntil(context, ModalRoute.withName("/")),
         ),
-        title: Text("Reaction Mode"),
+        title: const Text("Reaction Mode"),
         backgroundColor: Colors.blue,
       ),
       body: Column(children: <Widget>[
@@ -201,13 +202,14 @@ class ReactionModeState extends State<ReactionMode> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Container(
-                padding: EdgeInsets.all(10),
+                padding: const EdgeInsets.all(10),
                 child: Text("Number #: $internalNumberTracker")),
             Container(
-                padding: EdgeInsets.all(10), child: Text("Mode: Reaction")),
+                padding: const EdgeInsets.all(10),
+                child: const Text("Mode: Reaction")),
             Container(
                 width: 100,
-                padding: EdgeInsets.all(10),
+                padding: const EdgeInsets.all(10),
                 child: TimerManagement("bestTimeReaction", "Reaction Mode",
                     timePassedToFindNumbers, "/reactionMode", false)),
           ],
@@ -220,7 +222,7 @@ class ReactionModeState extends State<ReactionMode> {
               mainAxisSpacing: 5,
               crossAxisCount: 5,
               children: List.generate(
-                  MAX_ELEMENT_NUMBER,
+                  maxElementNumber,
                   (index) => ReactionModePlayGround(
                       parentAction: updateInternalNumberTracker))),
         ),
@@ -230,13 +232,15 @@ class ReactionModeState extends State<ReactionMode> {
 }
 
 class ClassicLightMode extends StatefulWidget {
+  const ClassicLightMode({Key? key}) : super(key: key);
+
   @override
   State<StatefulWidget> createState() {
     timePassedToFindNumbers = [0];
     globalTimer = 0;
     hasRoundFinished = false;
     listMaker();
-    return new ClassicLightModeState();
+    return ClassicLightModeState();
   }
 }
 
@@ -253,11 +257,11 @@ class ClassicLightModeState extends State<ClassicLightMode> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.white),
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () =>
               Navigator.popUntil(context, ModalRoute.withName("/")),
         ),
-        title: Text("Classic Light Mode"),
+        title: const Text("Classic Light Mode"),
         backgroundColor: Colors.blue,
       ),
       body: Column(children: <Widget>[
@@ -265,14 +269,14 @@ class ClassicLightModeState extends State<ClassicLightMode> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Container(
-                padding: EdgeInsets.all(10),
+                padding: const EdgeInsets.all(10),
                 child: Text("Number #: $internalNumberTracker")),
             Container(
-                padding: EdgeInsets.all(10),
-                child: Text("Mode: Classic Light")),
+                padding: const EdgeInsets.all(10),
+                child: const Text("Mode: Classic Light")),
             Container(
                 width: 100,
-                padding: EdgeInsets.all(10),
+                padding: const EdgeInsets.all(10),
                 child: TimerManagement(
                     "bestTimeClassicLight",
                     "Classic Light Mode",
@@ -289,7 +293,7 @@ class ClassicLightModeState extends State<ClassicLightMode> {
               mainAxisSpacing: 5,
               crossAxisCount: 5,
               children: List.generate(
-                  MAX_ELEMENT_NUMBER,
+                  maxElementNumber,
                   (index) => ClassicLightModePlayGround(
                       parentAction: updateInternalNumberTracker))),
         ),
@@ -299,13 +303,15 @@ class ClassicLightModeState extends State<ClassicLightMode> {
 }
 
 class ClassicLightReverseMode extends StatefulWidget {
+  const ClassicLightReverseMode({Key? key}) : super(key: key);
+
   @override
   State<StatefulWidget> createState() {
     timePassedToFindNumbers = [0];
     globalTimer = 0;
     hasRoundFinished = false;
     listMaker();
-    return new ClassicLightReverseModeState();
+    return ClassicLightReverseModeState();
   }
 }
 
@@ -322,11 +328,11 @@ class ClassicLightReverseModeState extends State<ClassicLightReverseMode> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.white),
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () =>
               Navigator.popUntil(context, ModalRoute.withName("/")),
         ),
-        title: Text("Classic Light Reverse Mode"),
+        title: const Text("Classic Light Reverse Mode"),
         backgroundColor: Colors.blue,
       ),
       body: Column(children: <Widget>[
@@ -334,14 +340,14 @@ class ClassicLightReverseModeState extends State<ClassicLightReverseMode> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Container(
-                padding: EdgeInsets.all(10),
+                padding: const EdgeInsets.all(10),
                 child: Text("Number #: $internalNumberTracker")),
             Container(
-                padding: EdgeInsets.all(10),
-                child: Text("Mode: Classic Light Reverse")),
+                padding: const EdgeInsets.all(10),
+                child: const Text("Mode: Classic Light Reverse")),
             Container(
                 width: 100,
-                padding: EdgeInsets.all(10),
+                padding: const EdgeInsets.all(10),
                 child: TimerManagement(
                     "bestTimeClassicLightReverse",
                     "Classic Light Reverse Mode",
@@ -358,7 +364,7 @@ class ClassicLightReverseModeState extends State<ClassicLightReverseMode> {
               mainAxisSpacing: 5,
               crossAxisCount: 5,
               children: List.generate(
-                  MAX_ELEMENT_NUMBER,
+                  maxElementNumber,
                   (index) => ClassicLightReverseModePlayGround(
                       parentAction: updateInternalNumberTracker))),
         ),
@@ -368,13 +374,15 @@ class ClassicLightReverseModeState extends State<ClassicLightReverseMode> {
 }
 
 class ClassicOriginalMode extends StatefulWidget {
+  const ClassicOriginalMode({Key? key}) : super(key: key);
+
   @override
   State<StatefulWidget> createState() {
     timePassedToFindNumbers = [0];
     globalTimer = 0;
     hasRoundFinished = false;
     listMaker();
-    return new ClassicOriginalModeState();
+    return ClassicOriginalModeState();
   }
 }
 
@@ -391,11 +399,11 @@ class ClassicOriginalModeState extends State<ClassicOriginalMode> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.white),
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () =>
               Navigator.popUntil(context, ModalRoute.withName("/")),
         ),
-        title: Text("Classic Original Mode"),
+        title: const Text("Classic Original Mode"),
         backgroundColor: Colors.blue,
       ),
       body: Column(children: <Widget>[
@@ -403,14 +411,14 @@ class ClassicOriginalModeState extends State<ClassicOriginalMode> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Container(
-                padding: EdgeInsets.all(10),
+                padding: const EdgeInsets.all(10),
                 child: Text("Number #: $internalNumberTracker")),
             Container(
-                padding: EdgeInsets.all(10),
-                child: Text("Mode: Classic Original")),
+                padding: const EdgeInsets.all(10),
+                child: const Text("Mode: Classic Original")),
             Container(
                 width: 100,
-                padding: EdgeInsets.all(10),
+                padding: const EdgeInsets.all(10),
                 child: TimerManagement(
                     "bestTimeClassicOriginal",
                     "Classic Original Mode",
@@ -427,7 +435,7 @@ class ClassicOriginalModeState extends State<ClassicOriginalMode> {
               mainAxisSpacing: 5,
               crossAxisCount: 5,
               children: List.generate(
-                  MAX_ELEMENT_NUMBER,
+                  maxElementNumber,
                   (index) => ClassicOriginalModePlayGround(
                       parentAction: updateInternalNumberTracker))),
         ),
@@ -437,17 +445,20 @@ class ClassicOriginalModeState extends State<ClassicOriginalMode> {
 }
 
 class ClassicOriginalReverseMode extends StatefulWidget {
+  const ClassicOriginalReverseMode({Key? key}) : super(key: key);
+
   @override
   State<StatefulWidget> createState() {
     timePassedToFindNumbers = [0];
     globalTimer = 0;
     hasRoundFinished = false;
     listMaker();
-    return new ClassicOriginalReverseModeState();
+    return ClassicOriginalReverseModeState();
   }
 }
 
-class ClassicOriginalReverseModeState extends State<ClassicOriginalReverseMode> {
+class ClassicOriginalReverseModeState
+    extends State<ClassicOriginalReverseMode> {
   int internalNumberTracker = 25;
   updateInternalNumberTracker(int nextNumber) {
     setState(() {
@@ -460,11 +471,11 @@ class ClassicOriginalReverseModeState extends State<ClassicOriginalReverseMode> 
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.white),
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () =>
               Navigator.popUntil(context, ModalRoute.withName("/")),
         ),
-        title: Text("Classic Original Reverse Mode"),
+        title: const Text("Classic Original Reverse Mode"),
         backgroundColor: Colors.blue,
       ),
       body: Column(children: <Widget>[
@@ -472,17 +483,17 @@ class ClassicOriginalReverseModeState extends State<ClassicOriginalReverseMode> 
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Container(
-                padding: EdgeInsets.all(10),
+                padding: const EdgeInsets.all(10),
                 child: Text("Number #: $internalNumberTracker")),
             Container(
-                padding: EdgeInsets.all(10),
-                child: Text(
+                padding: const EdgeInsets.all(10),
+                child: const Text(
                   "Mode: Classic Original Reverse",
                   style: TextStyle(fontSize: 12),
                 )),
             Container(
                 width: 100,
-                padding: EdgeInsets.all(10),
+                padding: const EdgeInsets.all(10),
                 child: TimerManagement(
                     "bestTimeClassicOriginalReverse",
                     "Classic Original Reverse Mode",
@@ -499,7 +510,7 @@ class ClassicOriginalReverseModeState extends State<ClassicOriginalReverseMode> 
               mainAxisSpacing: 5,
               crossAxisCount: 5,
               children: List.generate(
-                  MAX_ELEMENT_NUMBER,
+                  maxElementNumber,
                   (index) => ClassicOriginalReverseModePlayGround(
                       parentAction: updateInternalNumberTracker))),
         ),
@@ -509,13 +520,15 @@ class ClassicOriginalReverseModeState extends State<ClassicOriginalReverseMode> 
 }
 
 class MemoryMode extends StatefulWidget {
+  const MemoryMode({Key? key}) : super(key: key);
+
   @override
   State<StatefulWidget> createState() {
     timePassedToFindNumbers = [0];
     globalTimer = 0;
     hasRoundFinished = false;
     listMaker();
-    return new MemoryModeState();
+    return MemoryModeState();
   }
 }
 
@@ -532,11 +545,11 @@ class MemoryModeState extends State<MemoryMode> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.white),
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () =>
               Navigator.popUntil(context, ModalRoute.withName("/")),
         ),
-        title: Text("Memory Mode"),
+        title: const Text("Memory Mode"),
         backgroundColor: Colors.blue,
       ),
       body: Column(children: <Widget>[
@@ -544,13 +557,15 @@ class MemoryModeState extends State<MemoryMode> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Container(
-                padding: EdgeInsets.all(10),
+                padding: const EdgeInsets.all(10),
                 child: Text("Number #: $internalNumberTracker")),
-            Container(padding: EdgeInsets.all(10), child: Text("Mode: Memory")),
+            Container(
+                padding: const EdgeInsets.all(10),
+                child: const Text("Mode: Memory")),
             Container(
                 width: 100,
-                padding: EdgeInsets.all(10),
-                child: new TimerManagement("bestTimeMemory", "Memory Mode",
+                padding: const EdgeInsets.all(10),
+                child: TimerManagement("bestTimeMemory", "Memory Mode",
                     timePassedToFindNumbers, "/memoryMode", false)),
           ],
         ),
@@ -562,7 +577,7 @@ class MemoryModeState extends State<MemoryMode> {
               mainAxisSpacing: 5,
               crossAxisCount: 5,
               children: List.generate(
-                  MAX_ELEMENT_NUMBER,
+                  maxElementNumber,
                   (index) => MemoryModePlayGround(
                       parentAction: updateInternalNumberTracker))),
         ),
@@ -574,7 +589,7 @@ class MemoryModeState extends State<MemoryMode> {
 void listMaker() {
   listUsedForRandomAssignment.clear();
   sequenceControllerList.clear();
-  for (int i = 0; i < MAX_ELEMENT_NUMBER; i++) {
+  for (int i = 0; i < maxElementNumber; i++) {
     listUsedForRandomAssignment.add(i + 1);
     sequenceControllerList.add(i + 1);
   }
@@ -585,53 +600,39 @@ class TimerManagement extends StatefulWidget {
   List<int> list;
   String previousGameModeRoute, gameModeName;
   bool isReverse;
-  TimerManagement(String bestTimeName, String gameModeName, List<int> list,
-      String previousGameModeRoute, bool isReverse) {
-    this.bestTimeName = bestTimeName;
-    this.gameModeName = gameModeName;
-    this.list = list;
-    this.previousGameModeRoute = previousGameModeRoute;
-    this.isReverse = isReverse;
-  }
+  TimerManagement(this.bestTimeName, this.gameModeName, this.list,
+      this.previousGameModeRoute, this.isReverse,
+      {Key? key})
+      : super(key: key);
   @override
-  _TimerManagementState createState() => _TimerManagementState(
-      bestTimeName, gameModeName, list, previousGameModeRoute, isReverse);
+  State<TimerManagement> createState() => _TimerManagementState();
 }
 
 class _TimerManagementState extends State<TimerManagement> {
-  String bestTimeName;
-  List<int> list;
-  String previousGameModeRoute, gameModeName;
-  bool isReverse;
-  _TimerManagementState(String bestTimeName, String gameModeName,
-      List<int> list, String previousGameModeRoute, bool isReverse) {
-    this.bestTimeName = bestTimeName;
-    this.gameModeName = gameModeName;
-    this.list = list;
-    this.previousGameModeRoute = previousGameModeRoute;
-    this.isReverse = isReverse;
-  }
+  _TimerManagementState();
   @override
   void initState() {
-    Timer.periodic(Duration(milliseconds: 1), (callBack) {
+    Timer.periodic(const Duration(milliseconds: 1), (callBack) {
       setState(() {
         if (hasRoundFinished) {
           callBack.cancel();
         }
         globalTimer += 1;
         if (!hasRoundFinished && globalTimer == 60000) {
-          for (int i = this.list.length; i < MAX_ELEMENT_NUMBER; i++) {
-            this.list.add(0);
+          for (int i = widget.list.length; i < maxElementNumber; i++) {
+            widget.list.add(0);
           }
           Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => ResultPage(
-                      this.bestTimeName,
-                      this.gameModeName,
-                      this.list,
-                      this.previousGameModeRoute,
-                      this.isReverse)));
+            context,
+            MaterialPageRoute(
+              builder: (context) => ResultPage(
+                  widget.bestTimeName,
+                  widget.gameModeName,
+                  widget.list,
+                  widget.previousGameModeRoute,
+                  widget.isReverse),
+            ),
+          );
         }
       });
     });

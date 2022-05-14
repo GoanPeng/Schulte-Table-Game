@@ -1,34 +1,34 @@
 import 'dart:math';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'main.dart';
-import 'resultPage.dart';
+import 'result_page.dart';
 
-class ClassicLightModePlayGround extends StatefulWidget {
+class ClassicLightReverseModePlayGround extends StatefulWidget {
   final ValueChanged<int> parentAction;
-  const ClassicLightModePlayGround({Key key, this.parentAction})
+  const ClassicLightReverseModePlayGround(
+      {Key? key, required this.parentAction})
       : super(key: key);
   @override
-  _ClassicLightModePlayGroundState createState() =>
-      _ClassicLightModePlayGroundState();
+  State<ClassicLightReverseModePlayGround> createState() =>
+      _ClassicLightReverseModePlayGroundState();
 }
 
-class _ClassicLightModePlayGroundState
-    extends State<ClassicLightModePlayGround> {
-  _ClassicLightModePlayGroundState() {
-    var random = new Random();
+class _ClassicLightReverseModePlayGroundState
+    extends State<ClassicLightReverseModePlayGround> {
+  _ClassicLightReverseModePlayGroundState() {
+    var random = Random();
     do {
-      var checkIsValidInList = random.nextInt(MAX_ELEMENT_NUMBER) + 1;
+      var checkIsValidInList = random.nextInt(maxElementNumber) + 1;
       if (listUsedForRandomAssignment.contains(checkIsValidInList)) {
-        this._number = checkIsValidInList;
+        _number = checkIsValidInList;
         listUsedForRandomAssignment.remove(checkIsValidInList);
         break;
       }
     } while (true);
   }
 
-  int _number;
+  late int _number;
   bool _hasBeenPressed = false;
 
   @override
@@ -36,24 +36,20 @@ class _ClassicLightModePlayGroundState
     return Visibility(
       visible: _hasBeenPressed ? false : true,
       child: Container(
-        margin: EdgeInsets.all(1),
-        child: FlatButton(
-          child: Text(this._number.toString()),
-          color: Colors.blueAccent,
-          textColor: Colors.white,
+        margin: const EdgeInsets.all(1),
+        child: TextButton(
           onPressed: () {
-            if (sequenceControllerList.first == this._number) {
+            if (sequenceControllerList.last == _number) {
               var sumOfAllExistingElementsInList = 0;
-              timePassedToFindNumbers.forEach((element) {
+              for (var element in timePassedToFindNumbers) {
                 sumOfAllExistingElementsInList += element;
-              });
+              }
               timePassedToFindNumbers
                   .add(globalTimer - sumOfAllExistingElementsInList);
-              sequenceControllerList.removeAt(0);
-              if (this._number + 1 < MAX_ELEMENT_NUMBER + 1) {
-                widget.parentAction(this._number + 1);
+              sequenceControllerList.removeLast();
+              if (0 < _number - 1) {
+                widget.parentAction(_number - 1);
               }
-
               setState(() {
                 _hasBeenPressed = !_hasBeenPressed;
               });
@@ -64,14 +60,15 @@ class _ClassicLightModePlayGroundState
                     context,
                     MaterialPageRoute(
                         builder: (context) => ResultPage(
-                            "bestTimeClassicLight",
-                            "Classic Light Mode",
+                            "bestTimeClassicLightReverse",
+                            "Classic Light Reverse Mode",
                             timePassedToFindNumbers,
-                            "/classicLightMode",
-                            false)));
+                            "/classicLightReverseMode",
+                            true)));
               }
             }
           },
+          child: Text(_number.toString()),
         ),
       ),
     );

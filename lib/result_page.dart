@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'main.dart';
@@ -8,19 +7,15 @@ class ResultPage extends StatelessWidget {
   List<int> list;
   String previousGameModeRoute, gameModeName;
   bool isReverse;
-  ResultPage(String bestTimeName, String gameModeName, List<int> list,
-      String previousGameModeRoute, bool isReverse) {
-    this.bestTimeName = bestTimeName;
-    this.gameModeName = gameModeName;
-    this.list = list;
-    this.previousGameModeRoute = previousGameModeRoute;
-    this.isReverse = isReverse;
-  }
+  ResultPage(this.bestTimeName, this.gameModeName, this.list,
+      this.previousGameModeRoute, this.isReverse,
+      {Key? key})
+      : super(key: key);
 
-  List<String> resultList = new List<String>();
+  List<String> resultList = <String>[];
 
   Widget printTimeSpentToFindNumbers(String bestTimeName, List<int> list) {
-    int tempBestTime;
+    int tempBestTime = 0;
     switch (bestTimeName) {
       case "bestTimeReaction":
         {
@@ -86,11 +81,11 @@ class ResultPage extends StatelessWidget {
     resultList.add("Best Time: ${tempBestTime / 1000} second(s)");
 
     if (isReverse) {
-      for (int i = 0; i < MAX_ELEMENT_NUMBER; i++) {
-        resultList.add("${MAX_ELEMENT_NUMBER - i}: ${list[i] / 1000}");
+      for (int i = 0; i < maxElementNumber; i++) {
+        resultList.add("${maxElementNumber - i}: ${list[i] / 1000}");
       }
     } else {
-      for (int i = 0; i < MAX_ELEMENT_NUMBER; i++) {
+      for (int i = 0; i < maxElementNumber; i++) {
         resultList.add("${i + 1}: ${list[i] / 1000}");
       }
     }
@@ -109,7 +104,7 @@ class ResultPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-            icon: Icon(Icons.arrow_back, color: Colors.white),
+            icon: const Icon(Icons.arrow_back, color: Colors.white),
             onPressed: () =>
                 Navigator.popUntil(context, ModalRoute.withName("/"))),
         title: Text("$gameModeName Results"),
@@ -118,16 +113,12 @@ class ResultPage extends StatelessWidget {
       body: Center(
         child: Column(
           children: [
-            FlatButton(
-              child: Text("Play Again!"),
-              color: Colors.blueAccent,
-              textColor: Colors.white,
+            TextButton(
               onPressed: () =>
                   Navigator.pushNamed(context, previousGameModeRoute),
+              child: const Text("Play Again!"),
             ),
-            Container(
-                child:
-                    printTimeSpentToFindNumbers(this.bestTimeName, this.list))
+            Container(child: printTimeSpentToFindNumbers(bestTimeName, list))
           ],
         ),
       ),
